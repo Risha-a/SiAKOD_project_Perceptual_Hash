@@ -12,7 +12,7 @@ def phash(image_path):
     dct_block = dct_matrix[:8, :8]
     average = np.mean(dct_block)
     binary_dct = np.where(dct_block > average, 1, 0)
-    hash_value = int(''.join(str(x) for x in binary_dct.flatten()), 2)
+    hash_value = int(''.join(str(x) for x in binary_dct.flatten()))
 
     return str(hash_value)
 

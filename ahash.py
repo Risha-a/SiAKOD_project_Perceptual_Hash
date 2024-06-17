@@ -8,7 +8,7 @@ def ahash(image_path):
   pixels = np.array(image)
   average = pixels.mean()
   bits = [(1 if pixel > average else 0) for row in pixels for pixel in row]
-  hash_value = int("".join(str(bit) for bit in bits), 2)
+  hash_value = int("".join(str(bit) for bit in bits))
 
   return str(hash_value)
 
