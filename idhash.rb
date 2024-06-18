@@ -18,7 +18,7 @@ module DHashVips
     end
 
     def self.hamming a, b
-      (a ^ b).to_s(2).count "1"
+      ((a ^ b) & (a | b) >> 128).to_s(2).count "1"
     end
 
     def self.calculate(input, power = 3)
@@ -37,20 +37,25 @@ module DHashVips
             d.map{ |c| c.abs >= m ? 1 : 0 }.join.to_i(2),
           ]
       end
-      (((((i1 << size * size) + i2) << size * size) + d1) << size * size) + d2
+      ((((((i1 << size * size) + i2) << size * size) + d1) << size * size) + d2)
     end
   end
 
   files = [
-   "red_water.jpg","red_chb.jpg","noisy_image_1_110.jpg","red.jpg","red_1.jpg","red_2.jpg","red_3.jpg","red_4.jpg","red_5.jpg","red_6.jpg","red_7.jpg","red_8.jpg",
-"red_9.jpg","red_10.jpg","red_11.jpg","red_12.jpg","red_13.jpg","red_14.jpg","red_15.jpg","red_16.jpg","red_17.jpg","red_18.jpg","red_19.jpg","red_20.jpg",
-"red_21.jpg","red_22.jpg","red_23.jpg","red_24.jpg","red_25.jpg","red_26.jpg","red_27.jpg","red_28.jpg","red_29.jpg","red_30.jpg","red_31.jpg","red_32.jpg",
-"red_33.jpg","red_34.jpg","red_35.jpg","red_36.jpg","red_37.jpg","red_38.jpg","red_39.jpg","red_40.jpg","red_41.jpg","red_42.jpg","red_col_4.jpg","red_col_5.jpg",
-"red_col_6.jpg","red_col_7.jpg","red_col_8.jpg","red_col_9.jpg","red_col_10.jpg","red_col_11.jpg","red_col_12.jpg","red_col_13.jpg","red_col_14.jpg","red_col_15.jpg",
-"red_col_16.jpg","red_col_17.jpg","red_col_18.jpg","red_col_19.jpg","red_col_20.jpg"
+  "664e1ea0193db_noisy_image_1_1.jpg","black_chb.jpg","noisy_image_1_1.jpg","black.jpg","black_1.jpg","black_2.jpg","black_3.jpg","black_4.jpg","black_5.jpg",
+"black_6.jpg","black_7.jpg","black_8.jpg","black_9.jpg","black_10.jpg","black_11.jpg","black_12.jpg","black_13.jpg","black_14.jpg","black_15.jpg","black_16.jpg",
+"black_17.jpg","black_18.jpg","black_19.jpg","black_20.jpg","black_21.jpg","black_22.jpg","black_23.jpg","black_24.jpg","black_25.jpg","black_26.jpg",
+"black_27.jpg","black_28.jpg","black_29.jpg","black_30.jpg","black_31.jpg","black_32.jpg","black_33.jpg","black_34.jpg","black_35.jpg","black_36.jpg",
+"black_37.jpg","black_38.jpg","black_39.jpg","black_40.jpg","black_41.jpg","black_42.jpg","black_col_4.jpg","black_col_5.jpg","black_col_6.jpg",
+"black_col_7.jpg","black_col_8.jpg","black_col_9.jpg","black_col_10.jpg","black_col_11.jpg","black_col_12.jpg","black_col_13.jpg","black_col_14.jpg",
+"black_col_15.jpg","black_col_16.jpg","black_col_17.jpg","black_col_18.jpg","black_col_19.jpg","black_col_20.jpg","black_fred_1.jpg","black_fred_2.jpg",
+"black_fred_3.jpg","black_fred_4.jpg","black_fred_5.jpg","black_fred_6.jpg","black_fred_7.jpg","black_fred_8.jpg","black_fred_9.jpg","black_fred_10.jpg",
+"black_fred_11.jpg","black_fred_12.jpg","black_fred_13.jpg","black_fred_14.jpg","black_fred_15.jpg","black_fred_16.jpg","black_fred_17.jpg","black_fred_18.jpg",
+"black_fred_19.jpg","black_fred_20.jpg"
+
 ]
 
-  original_hash = IDHash.calculate("red.jpg")
+  original_hash = IDHash.calculate("black.jpg")
 
   book = Spreadsheet::Workbook.new
   sheet1 = book.create_worksheet
@@ -66,15 +71,14 @@ module DHashVips
     start_time = Time.now
     hash_value = IDHash.calculate(file)
     end_time = Time.now
-    hashing = hash_value.to_s + "."
 
     sheet1[row, 0] = file
-    sheet1[row, 1] = hashing
+    sheet1[row, 1] = hash_value.to_s
     sheet1[row, 2] = end_time - start_time
     sheet1[row, 3] = IDHash.hamming(original_hash, hash_value)
 
     row += 1
   end
 
-  book.write('red_idhash.xls')
+  book.write('black_idhash.xls')
 end
